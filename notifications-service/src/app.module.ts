@@ -5,30 +5,31 @@ import {
 } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
-import { NotificationsService } from './notifications/notifications.service';
-import { NotificationsResolver } from './notifications/notifications.resolver';
-import { JwtStrategy } from './auth/jwt.strategy';
+import { NotificationsModule } from './notifications/notifications.module'; // <-- On importe la branche !
 
 @Module({
   imports: [
+    // 1. Connexion à la base de données
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root', // ⚠️ Remplace par ton utilisateur MySQL
-      password: 'root', // ⚠️ Remplace par ton mot de passe MySQL
-      database: 'notifs_db', // La base que tu as créée dans Workbench
+      username: 'root',
+      password: 'root',
+      database: 'notifs_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // Crée les tables automatiquement (pratique en dev)
+      synchronize: true,
     }),
 
     // 2. Configuration de GraphQL en mode Subgraph (Federation)
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: { federation: 2 }, // Génère le schéma automatiquement
+      autoSchemaFile: { federation: 2 },
     }),
+
+    // 3. On attache la branche Notifications au tronc de l'application
+    NotificationsModule,
   ],
-  providers: [NotificationsResolver, NotificationsService, JwtStrategy],
-  exports: [NotificationsService],
+  // On enlève les providers d'ici, ils sont déjà dans NotificationsModule !
 })
 export class AppModule {}
