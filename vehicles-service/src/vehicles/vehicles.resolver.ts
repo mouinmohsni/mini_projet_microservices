@@ -47,7 +47,7 @@ export class VehiclesResolver {
 
 
     // 🔒 SEUL L'ADMIN PEUT MODIFIER TOUT LE VÉHICULE
-    @Mutation(() => Vehicule)
+
     @UseGuards(GqlAuthGuard, RolesGuard) // On active les deux videurs
     @Roles('ADMIN') // On exige le rôle ADMIN
     @Mutation(() => Vehicule, { name: 'updateVehicle', description: 'Modifier un véhicule existant' })
@@ -56,7 +56,7 @@ export class VehiclesResolver {
     }
 
     // 🔓 L'OPÉRATEUR (et l'Admin) PEUT MODIFIER LE STATUT
-    @Mutation(() => Vehicule)
+
     @UseGuards(GqlAuthGuard, RolesGuard)
     @Roles('ADMIN', 'OPERATOR') // Les deux rôles sont acceptés
     @Mutation(() => Vehicule, { name: 'updateVehicleStatus', description: 'Modifier uniquement le statut (Opérateur)' })
@@ -65,7 +65,7 @@ export class VehiclesResolver {
     }
 
     // 🔒 SEUL L'ADMIN PEUT SUPPRIMER TOUT LE VÉHICULE
-    @Mutation(() => Vehicule)
+
     @UseGuards(GqlAuthGuard, RolesGuard) // On active les deux videurs
     @Roles('ADMIN') // On exige le rôle ADMIN
     @Mutation(() => Boolean, { name: 'removeVehicle', description: 'Supprimer un véhicule' })
