@@ -1,18 +1,30 @@
-import { ObjectType, Field, Int, registerEnumType, Directive } from '@nestjs/graphql';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  ObjectType,
+  Field,
+  Int,
+  registerEnumType,
+  Directive,
+} from '@nestjs/graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 // 1. Les Enums
 export enum IncidentType {
-    ACCIDENT = 'ACCIDENT',
-    TRAVAUX = 'TRAVAUX',
-    ROUTE_FERMEE = 'ROUTE_FERMEE',
-    EMBOUTEILLAGE = 'EMBOUTEILLAGE',
+  ACCIDENT = 'ACCIDENT',
+  TRAVAUX = 'TRAVAUX',
+  ROUTE_FERMEE = 'ROUTE_FERMEE',
+  EMBOUTEILLAGE = 'EMBOUTEILLAGE',
 }
 
 export enum IncidentStatus {
-    SIGNALE = 'SIGNALE',
-    EN_COURS = 'EN_COURS',
-    RESOLU = 'RESOLU',
+  SIGNALE = 'SIGNALE',
+  EN_COURS = 'EN_COURS',
+  RESOLU = 'RESOLU',
 }
 
 registerEnumType(IncidentType, { name: 'IncidentType' });
@@ -23,33 +35,37 @@ registerEnumType(IncidentStatus, { name: 'IncidentStatus' });
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Incident {
-    @PrimaryGeneratedColumn()
-    @Field(() => Int)
-    id: number;
+  @PrimaryGeneratedColumn()
+  @Field(() => Int)
+  id: number;
 
-    @Column()
-    @Field()
-    description: string;
+  @Column()
+  @Field()
+  description: string;
 
-    @Column({ type: 'enum', enum: IncidentType })
-    @Field(() => IncidentType)
-    type: IncidentType;
+  @Column({ type: 'enum', enum: IncidentType })
+  @Field(() => IncidentType)
+  type: IncidentType;
 
-    @Column({ type: 'enum', enum: IncidentStatus, default: IncidentStatus.SIGNALE })
-    @Field(() => IncidentStatus)
-    statut: IncidentStatus;
+  @Column({
+    type: 'enum',
+    enum: IncidentStatus,
+    default: IncidentStatus.SIGNALE,
+  })
+  @Field(() => IncidentStatus)
+  statut: IncidentStatus;
 
-    // ⚠️ L'ID de l'utilisateur qui a créé l'incident.
-    // On le stocke ici pour que l'API Gateway puisse faire le lien plus tard !
-    @Column()
-    @Field(() => Int)
-    authorId: number;
+  // ⚠️ L'ID de l'utilisateur qui a créé l'incident.
+  // On le stocke ici pour que l'API Gateway puisse faire le lien plus tard !
+  @Column()
+  @Field(() => Int)
+  authorId: number;
 
-    @CreateDateColumn()
-    @Field()
-    createdAt: Date;
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    @Field()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

@@ -21,7 +21,7 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
             { name: 'incidents', url: 'http://localhost:3003/graphql' },
             { name: 'notifications', url: 'http://localhost:3004/graphql' },
           ],
-        } ),
+        }),
         // 2. On configure le transfert du Token JWT
         buildService({ name, url }) {
           return new RemoteGraphQLDataSource({
@@ -29,7 +29,10 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
             willSendRequest({ request, context }: any) {
               // Si le client a envoyé un token à la Gateway, on le copie et on l'envoie au sous-service
               if (context.req && context.req.headers.authorization) {
-                request.http.headers.set('authorization', context.req.headers.authorization );
+                request.http.headers.set(
+                  'authorization',
+                  context.req.headers.authorization,
+                );
               }
             },
           });

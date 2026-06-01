@@ -1,15 +1,27 @@
-import { ObjectType, Field, Int, registerEnumType ,Directive } from '@nestjs/graphql';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  ObjectType,
+  Field,
+  Int,
+  registerEnumType,
+  Directive,
+} from '@nestjs/graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 // 1. Définition des Enums
 export enum UserRole {
-    ADMIN = 'ADMIN',
-    OPERATOR = 'OPERATOR',
+  ADMIN = 'ADMIN',
+  OPERATOR = 'OPERATOR',
 }
 
 export enum UserStatus {
-    ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }
 
 // On enregistre les Enums pour que GraphQL les comprenne
@@ -21,42 +33,41 @@ registerEnumType(UserStatus, { name: 'UserStatus' });
 @ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
 @Directive('@key(fields: "id")')
 export class User {
+  @PrimaryGeneratedColumn() // TypeORM : Clé primaire auto-incrémentée
+  @Field(() => Int) // GraphQL : Champ de type Entier
+  id: number;
 
-    @PrimaryGeneratedColumn() // TypeORM : Clé primaire auto-incrémentée
-    @Field(() => Int)         // GraphQL : Champ de type Entier
-    id: number;
+  @Column()
+  @Field()
+  nom: string;
 
-    @Column()
-    @Field()
-    nom: string;
+  @Column()
+  @Field()
+  prenom: string;
 
-    @Column()
-    @Field()
-    prenom: string;
+  @Column({ unique: true }) // TypeORM : L'email doit être unique en base
+  @Field()
+  email: string;
 
-    @Column({ unique: true }) // TypeORM : L'email doit être unique en base
-    @Field()
-    email: string;
+  @Column()
+  // ⚠️ ATTENTION SÉCURITÉ : Remarque bien qu'il n'y a PAS de décorateur @Field() ici !
+  // Ainsi, TypeORM va bien sauvegarder le mot de passe en base,
+  // mais GraphQL refusera de l'exposer si un client le demande.
+  password: string;
 
-    @Column()
-        // ⚠️ ATTENTION SÉCURITÉ : Remarque bien qu'il n'y a PAS de décorateur @Field() ici !
-        // Ainsi, TypeORM va bien sauvegarder le mot de passe en base,
-        // mais GraphQL refusera de l'exposer si un client le demande.
-    password: string;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.OPERATOR })
+  @Field(() => UserRole)
+  role: UserRole;
 
-    @Column({ type: 'enum', enum: UserRole, default: UserRole.OPERATOR })
-    @Field(() => UserRole)
-    role: UserRole;
+  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
+  @Field(() => UserStatus)
+  statut: UserStatus;
 
-    @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
-    @Field(() => UserStatus)
-    statut: UserStatus;
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
 
-    @CreateDateColumn()
-    @Field()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    @Field()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

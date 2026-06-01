@@ -1,10 +1,4 @@
-import {
-  ObjectType,
-  Field,
-  Int,
-  Directive,
-  Float,
-} from '@nestjs/graphql';
+import { ObjectType, Field, Int, Directive, Float } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,

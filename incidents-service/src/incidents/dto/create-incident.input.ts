@@ -4,12 +4,12 @@ import { IncidentType } from '../entities/incident.entity';
 
 @InputType()
 export class CreateIncidentInput {
-    @Field()
-    @IsNotEmpty()
-    @IsString()
-    description: string;
+  @Field()
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
-    @Field(() => IncidentType)
-    @IsEnum(IncidentType)
-    type: IncidentType;
+  @Field(() => IncidentType)
+  @IsEnum(IncidentType)
+  type: IncidentType;
 }

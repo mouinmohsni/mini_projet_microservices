@@ -15,4 +15,3 @@ import { JwtStrategy } from '../auth/jwt.strategy'; // <-- L'import
   exports: [TrafficService],
 })
 export class TrafficModule {}
-

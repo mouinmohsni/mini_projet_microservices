@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TrafficModule } from './traffic/traffic.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: { federation: 2 },
-    })
-      ,TrafficModule],
-
+    }),
+    TrafficModule,
+  ],
 })
 export class AppModule {}

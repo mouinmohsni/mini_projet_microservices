@@ -4,11 +4,11 @@ import { IncidentStatus } from '../entities/incident.entity';
 
 @InputType()
 export class UpdateIncidentStatusInput {
-    @Field(() => Int)
-    @IsNotEmpty()
-    id: number;
+  @Field(() => Int)
+  @IsNotEmpty()
+  id: number;
 
-    @Field(() => IncidentStatus)
-    @IsEnum(IncidentStatus)
-    statut: IncidentStatus;
+  @Field(() => IncidentStatus)
+  @IsEnum(IncidentStatus)
+  statut: IncidentStatus;
 }
