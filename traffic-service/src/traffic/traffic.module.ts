@@ -9,7 +9,7 @@ import { JwtStrategy } from '../auth/jwt.strategy'; // <-- L'import
 @Module({
   imports: [
     TypeOrmModule.forFeature([TrafficZone]),
-    JwtModule.register({ secret: 'MON_SECRET_TRES_SECURISE' }), // <-- Le module JWT
+    JwtModule.register({ secret: process.env.JWT_SECRET }), // <-- Le module JWT
   ],
   providers: [TrafficResolver, TrafficService, JwtStrategy], // <-- Ajout ici !
   exports: [TrafficService],

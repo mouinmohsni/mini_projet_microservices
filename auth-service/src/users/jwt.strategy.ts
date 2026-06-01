@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // On dit au videur de chercher le token dans le header "Authorization: Bearer <token>"
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: 'MON_SECRET_TRES_SECURISE', // Le même secret que dans users.module.ts
+      secretOrKey: process.env.JWT_SECRET, // Le même secret que dans users.module.ts
     });
   }
 

@@ -11,7 +11,7 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'MON_SECRET_TRES_SECURISE', // En production, on mettra ça dans un fichier .env !
+      secret: process.env.JWT_SECRET, // En production, on mettra ça dans un fichier .env !
       signOptions: { expiresIn: '1h' }, // Le token expirera dans 1 heure
     }),
   ],

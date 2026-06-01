@@ -6,16 +6,17 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { IncidentsModule } from './incidents/incidents.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // 1. Configuration de la base de données
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root', // ⚠️ Remplace par ton utilisateur MySQL
-      password: 'root', // ⚠️ Remplace par ton mot de passe MySQL
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
       database: 'incidents_db', // La base que tu as créée dans Workbench
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // Crée les tables automatiquement (pratique en dev)

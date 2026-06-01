@@ -11,7 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     TypeOrmModule.forFeature([Vehicule, VehiclePosition]),
     JwtModule.register({
-      secret: 'MON_SECRET_TRES_SECURISE',
+      secret: process.env.JWT_SECRET,
     }),
   ],
   providers: [VehiclesResolver, VehiclesService, JwtStrategy],

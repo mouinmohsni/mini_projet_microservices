@@ -5,17 +5,18 @@ import {
 } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
-import { NotificationsModule } from './notifications/notifications.module'; // <-- On importe la branche !
+import { NotificationsModule } from './notifications/notifications.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // 1. Connexion à la base de données
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
       database: 'notifs_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,

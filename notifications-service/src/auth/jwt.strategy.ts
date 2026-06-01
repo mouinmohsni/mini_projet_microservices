@@ -11,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       // ⚠️ TRÈS IMPORTANT : Ce secret doit être EXACTEMENT le même que celui
       // que tu as mis dans le JwtModule du service Authentification !
-      secretOrKey: 'MON_SECRET_TRES_SECURISE',
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 

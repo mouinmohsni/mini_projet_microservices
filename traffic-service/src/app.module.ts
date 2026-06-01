@@ -6,15 +6,17 @@ import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root', // Ton user
-      password: 'root', // Ton mot de passe
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
       database: 'traffic_db', // ⚠️ Attention, c'est la base des véhicules !
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
