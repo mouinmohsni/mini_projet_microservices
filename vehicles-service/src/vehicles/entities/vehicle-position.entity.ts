@@ -1,63 +1,60 @@
-import {ObjectType, Field, Int, registerEnumType, Directive, Float} from '@nestjs/graphql';
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    ForeignKey,
-    ManyToOne, JoinColumn
+  ObjectType,
+  Field,
+  Int,
+  Directive,
+  Float,
+} from '@nestjs/graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import {Vehicule} from "./vehicule.entity";
-
-
-
-
-
+import { Vehicule } from './vehicule.entity';
 
 //  La classe vehicule
-@Entity('VehiclePositions') // Décorateur TypeORM : crée une table "users" dans MySQL
+@Entity('vehiclePositions') // Décorateur TypeORM : crée une table "users" dans MySQL
 @ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
 @Directive('@key(fields: "id")')
 export class VehiclePosition {
+  @PrimaryGeneratedColumn()
+  @Field(() => Int)
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    @Field(() => Int)
-    id: number;
+  @Column({ type: 'float' })
+  @Field(() => Float)
+  latitude: number;
 
-    @Column({ type: 'float' })
-    @Field(()=> Float)
-    latitude  : number;
+  @Column({ type: 'float' })
+  @Field(() => Float)
+  longitude: number;
 
-    @Column({ type: 'float' })
-    @Field(()=> Float)
-    longitude  : number;
+  @Column()
+  @Field()
+  timestamp: Date;
 
-    @Column()
-    @Field()
-    timestamp  : Date;
+  // --- LA RELATION (Cette position appartient à un véhicule) ---
+  @ManyToOne(() => Vehicule, (vehicule) => vehicule.positions, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'vehicleId' }) // C'est ça qui crée la vraie clé étrangère en base !
+  @Field(() => Vehicule)
+  vehicule: Vehicule;
 
-    // --- LA RELATION (Cette position appartient à un véhicule) ---
-    @ManyToOne(() => Vehicule, (vehicule) => vehicule.positions, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'vehicleId' }) // C'est ça qui crée la vraie clé étrangère en base !
-    @Field(() => Vehicule)
-    vehicule: Vehicule;
+  // On garde l'ID accessible facilement si on en a besoin
+  @Column()
+  @Field(() => Int)
+  vehicleId: number;
 
-    // On garde l'ID accessible facilement si on en a besoin
-    @Column()
-    @Field(() => Int)
-    vehicleId: number;
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
 
-
-
-
-
-
-    @CreateDateColumn()
-    @Field()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    @Field()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 }

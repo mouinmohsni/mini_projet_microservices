@@ -4,11 +4,11 @@ import { IsEnum, IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class UpdateVehicleStatusInput {
-    @Field(() => Int)
-    @IsNotEmpty()
-    id: number;
+  @Field(() => Int)
+  @IsNotEmpty()
+  id: number;
 
-    @Field(() => VehicleStatus)
-    @IsEnum(VehicleStatus)
-    statut: VehicleStatus;
+  @Field(() => VehicleStatus)
+  @IsEnum(VehicleStatus)
+  statut: VehicleStatus;
 }
