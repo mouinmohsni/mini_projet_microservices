@@ -5,7 +5,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
-
+// verifier si le role de qui es extrair du token est le meme qui est assigner par le decorateur qu'on a cree
   canActivate(context: ExecutionContext): boolean {
     // On regarde quel rôle est exigé pour cette route
     const requiredRoles = this.reflector.get<string[]>(

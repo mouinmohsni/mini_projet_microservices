@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// 1. Les Enums
+//  Les Enums
 export enum IncidentType {
   ACCIDENT = 'ACCIDENT',
   TRAVAUX = 'TRAVAUX',
@@ -31,8 +31,8 @@ registerEnumType(IncidentType, { name: 'IncidentType' });
 registerEnumType(IncidentStatus, { name: 'IncidentStatus' });
 
 // 2. L'Entité
-@Entity('incidents')
-@ObjectType()
+@Entity('incidents') //  le nom dans la base de donner
+@ObjectType() // cree un insadant pour grapql
 @Directive('@key(fields: "id")')
 export class Incident {
   @PrimaryGeneratedColumn()
@@ -55,8 +55,7 @@ export class Incident {
   @Field(() => IncidentStatus)
   statut: IncidentStatus;
 
-  // ⚠️ L'ID de l'utilisateur qui a créé l'incident.
-  // On le stocke ici pour que l'API Gateway puisse faire le lien plus tard !
+  //  L'ID du user qui a cree l'incident.
   @Column()
   @Field(() => Int)
   authorId: number;

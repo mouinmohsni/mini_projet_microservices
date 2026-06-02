@@ -12,7 +12,6 @@ import { Incident } from './entities/incident.entity';
 import { CreateIncidentInput } from './dto/create-incident.input';
 import { UpdateIncidentStatusInput } from './dto/update-incident-status.input';
 
-// ⚠️ Assure-toi d'avoir bien copié le dossier "auth" dans ce service aussi !
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -26,28 +25,28 @@ export class IncidentsResolver {
   // MUTATIONS
   // ---------------------------------------------------------
 
-  // 🔓 Accessible à l'ADMIN et à l'OPERATOR
+// methode cree
   @Mutation(() => Incident, {
     name: 'createIncident',
     description: 'Déclarer un nouvel incident',
   })
-  @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'OPERATOR')
+  @UseGuards(GqlAuthGuard, RolesGuard) // on a utiliser les garde pour verifier le token et pour recupere le role
+  @Roles('ADMIN', 'OPERATOR') // Accessible à l'ADMIN et a l'OPERATOR
   createIncident(
     @Args('createIncidentInput') createIncidentInput: CreateIncidentInput,
-    @CurrentUser() user: any, // <-- MAGIE : On récupère l'utilisateur connecté grâce au token !
+    @CurrentUser() user: any, // On récupère User connecté grâce au token !
   ): Promise<Incident> {
-    // On passe les infos de l'incident ET l'ID de l'utilisateur au service
+
     return this.incidentsService.createIncident(createIncidentInput, user.id);
   }
 
-  // 🔓 Accessible à l'ADMIN et à l'OPERATOR
+  // methode update
   @Mutation(() => Incident, {
     name: 'updateIncidentStatus',
     description: "Modifier le statut d'un incident",
   })
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'OPERATOR')
+  @Roles('ADMIN', 'OPERATOR')//  Accessible à l'ADMIN et à l'OPERATOR
   updateIncidentStatus(
     @Args('updateIncidentStatusInput')
     updateIncidentStatusInput: UpdateIncidentStatusInput,
@@ -57,13 +56,13 @@ export class IncidentsResolver {
     );
   }
 
-  // 🔒 Réservé à l'ADMIN
+  // methode supprimer
   @Mutation(() => Boolean, {
     name: 'removeIncident',
     description: 'Supprimer un incident',
   })
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN') //  Réservé à l'ADMIN
   removeIncident(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<boolean> {
@@ -71,20 +70,21 @@ export class IncidentsResolver {
   }
 
   // ---------------------------------------------------------
-  // QUERIES
+  //  requet get
   // ---------------------------------------------------------
 
-  // 🟢 Accessible à tout utilisateur connecté
+  //methode get all
   @Query(() => [Incident], {
     name: 'incidents',
     description: 'Consulter tous les incidents',
   })
   @UseGuards(GqlAuthGuard)
+  // Accessible à tout utilisateur connecté on a pas des role
   findAllIncidents(): Promise<Incident[]> {
     return this.incidentsService.findAllIncidents();
   }
 
-  // 🟢 Accessible à tout utilisateur connecté
+// methode get by id
   @Query(() => Incident, {
     name: 'incident',
     description: 'Consulter un incident spécifique',

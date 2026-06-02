@@ -12,24 +12,25 @@ export class IncidentsService {
     private incidentRepository: Repository<Incident>,
   ) {}
 
-  // 1. Déclarer un incident (On a besoin de l'input ET de l'ID de l'auteur)
+  // 1. cree un incident
+
   async createIncident(
     createIncidentInput: CreateIncidentInput,
     authorId: number,
   ): Promise<Incident> {
     const newIncident = this.incidentRepository.create({
       ...createIncidentInput,
-      authorId: authorId, // On attache l'ID de l'utilisateur connecté !
+      authorId: authorId, // ajouter l'id de User connecter
     });
     return this.incidentRepository.save(newIncident);
   }
 
-  // 2. Consulter tous les incidents
+  //  recuperer  tous les incidents
   async findAllIncidents(): Promise<Incident[]> {
     return this.incidentRepository.find();
   }
 
-  // 3. Consulter un incident spécifique
+  // recupere un incident par id
   async findOneIncident(id: number): Promise<Incident> {
     const incident = await this.incidentRepository.findOne({ where: { id } });
     if (!incident) {
@@ -38,7 +39,7 @@ export class IncidentsService {
     return incident;
   }
 
-  // 4. Modifier le statut d'un incident
+  //  Modifier le statut d'un incident
   async updateIncidentStatus(
     updateInput: UpdateIncidentStatusInput,
   ): Promise<Incident> {

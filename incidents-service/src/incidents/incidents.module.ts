@@ -8,9 +8,9 @@ import { JwtStrategy } from '../auth/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Incident]),
+    TypeOrmModule.forFeature([Incident]), // pour que type orm cree les repo
     JwtModule.register({
-      secret: process.env.JWT_SECRET!, // Toujours le même secret !
+      secret: process.env.JWT_SECRET!,
     }),
   ],
   providers: [IncidentsResolver, IncidentsService, JwtStrategy],

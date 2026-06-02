@@ -6,11 +6,9 @@ import { Injectable } from '@nestjs/common';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      // On dit de chercher le token dans le header "Authorization: Bearer <token>"
+      //  chercher le token et verification sa valideter
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      // ⚠️ TRÈS IMPORTANT : Ce secret doit être EXACTEMENT le même que celui
-      // que tu as mis dans le JwtModule du service Authentification !
       secretOrKey: process.env.JWT_SECRET!,
     });
   }
