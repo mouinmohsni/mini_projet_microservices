@@ -15,7 +15,7 @@ export class NotificationsService {
     private notificationRepository: Repository<Notification>,
   ) {}
 
-  // 1. Envoyer une notification
+  //  cree une notification
   async create(
     createNotificationInput: CreateNotificationInput,
   ): Promise<Notification> {
@@ -25,7 +25,7 @@ export class NotificationsService {
     return this.notificationRepository.save(newNotification);
   }
 
-  // 2. Consulter les notifications d'un utilisateur spécifique
+  // Consulter les notifications par user id
   async findAllForUser(userId: number): Promise<Notification[]> {
     return this.notificationRepository.find({
       where: { userId: userId },
@@ -33,7 +33,7 @@ export class NotificationsService {
     });
   }
 
-  // 3. Marquer une notification comme lue
+  // Marquer une notification comme lue
   async markAsRead(id: number, userId: number): Promise<Notification> {
     const notification = await this.notificationRepository.findOne({
       where: { id },
@@ -43,7 +43,7 @@ export class NotificationsService {
       throw new NotFoundException(`Notification avec l'ID ${id} introuvable`);
     }
 
-    // 🔒 SÉCURITÉ : On vérifie que la notification appartient bien à l'utilisateur connecté
+    //  On vérifie que la notification appartient bien à l'utilisateur connecté
     if (notification.userId !== userId) {
       throw new ForbiddenException(
         "Vous n'êtes pas autorisé à modifier cette notification",

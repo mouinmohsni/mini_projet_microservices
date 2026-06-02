@@ -22,15 +22,15 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,
     }),
 
-    // 2. Configuration de GraphQL en mode Subgraph (Federation)
+    // Configuration de GraphQL pour exposer ce service au geteeway
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: { federation: 2 },
     }),
 
-    // 3. On attache la branche Notifications au tronc de l'application
+
     NotificationsModule,
   ],
-  // On enlève les providers d'ici, ils sont déjà dans NotificationsModule !
+
 })
 export class AppModule {}

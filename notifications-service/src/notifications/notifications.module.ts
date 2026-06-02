@@ -8,7 +8,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Notification]), // <-- C'est LUI qui crée le Repository !
+    TypeOrmModule.forFeature([Notification]),
     JwtModule.register({
       secret: process.env.JWT_SECRET!,
     }),

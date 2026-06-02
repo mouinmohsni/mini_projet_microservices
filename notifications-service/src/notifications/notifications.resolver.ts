@@ -24,7 +24,7 @@ export class NotificationsResolver {
   // MUTATIONS
   // ---------------------------------------------------------
 
-  // 🔒 Réservé à l'ADMIN et l'OPERATOR (pour envoyer une alerte à un utilisateur)
+  // methode cree
   @Mutation(() => Notification, {
     name: 'createNotification',
     description: 'Envoyer une notification',
@@ -38,7 +38,7 @@ export class NotificationsResolver {
     return this.notificationsService.create(createNotificationInput);
   }
 
-  // 🟢 Accessible à tout utilisateur connecté (pour marquer SA notification comme lue)
+ //methode pour marquer la notif comme lu
   @Mutation(() => Notification, {
     name: 'markNotificationAsRead',
     description: 'Marquer une notification comme lue',
@@ -46,9 +46,8 @@ export class NotificationsResolver {
   @UseGuards(GqlAuthGuard)
   markNotificationAsRead(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: JwtUser, // <-- MAGIE : On récupère l'ID de l'utilisateur depuis le token
+    @CurrentUser() user: JwtUser, //On récupère l'ID du User depuis le token
   ): Promise<Notification> {
-    // On passe l'ID de la notification ET l'ID de l'utilisateur au service pour la vérification de sécurité
     return this.notificationsService.markAsRead(id, user.id);
   }
 
@@ -56,15 +55,12 @@ export class NotificationsResolver {
   // QUERIES
   // ---------------------------------------------------------
 
-  // 🟢 Accessible à tout utilisateur connecté (pour voir SES propres notifications)
   @Query(() => [Notification], {
     name: 'myNotifications',
     description: 'Consulter mes notifications',
   })
   @UseGuards(GqlAuthGuard)
   myNotifications(@CurrentUser() user: JwtUser): Promise<Notification[]> {
-    // Le client ne demande pas "les notifications de l'utilisateur X",
-    // il demande juste "MES notifications". C'est ultra sécurisé !
     return this.notificationsService.findAllForUser(user.id);
   }
 }

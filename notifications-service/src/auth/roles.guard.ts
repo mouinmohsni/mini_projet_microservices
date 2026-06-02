@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
       return true; // Si aucun rôle n'est exigé, on laisse passer
     }
 
-    // On récupère l'utilisateur décodé par le GqlAuthGuard
+   //on recupere les l'utilisateur connecter
     const ctx = GqlExecutionContext.create(context);
     const user = ctx.getContext().req.user;
 
