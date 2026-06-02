@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Incident } from './entities/incident.entity';
 import { CreateIncidentInput } from './dto/create-incident.input';
 import { UpdateIncidentStatusInput } from './dto/update-incident-status.input';
+import {UpdateIncidentInput} from "./dto/update-incident.input";
 
 @Injectable()
 export class IncidentsService {
@@ -53,5 +54,12 @@ export class IncidentsService {
     const incident = await this.findOneIncident(id);
     await this.incidentRepository.remove(incident);
     return true;
+  }
+
+  async update(id: number, updateIncidentInput: UpdateIncidentInput): Promise<Incident> {
+    const { id: incidentId, ...updateData } = updateIncidentInput;
+
+    await this.incidentRepository.update(id, updateData);
+    return this.findOneIncident(id);
   }
 }

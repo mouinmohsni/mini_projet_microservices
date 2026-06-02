@@ -17,19 +17,21 @@ export class NotificationsService {
 
   //  cree une notification
   async create(
-    createNotificationInput: CreateNotificationInput,
+      createNotificationInput: CreateNotificationInput,
+      userId: number,
   ): Promise<Notification> {
-    const newNotification = this.notificationRepository.create(
-      createNotificationInput,
-    );
+    const newNotification = this.notificationRepository.create({
+      ...createNotificationInput,
+      userId: userId,
+    });
     return this.notificationRepository.save(newNotification);
   }
 
   // Consulter les notifications par user id
   async findAllForUser(userId: number): Promise<Notification[]> {
     return this.notificationRepository.find({
-      where: { userId: userId },
-      order: { createdAt: 'DESC' }, // 💡 Astuce : Les plus récentes en premier !
+      where: { receiverId: userId },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -44,7 +46,7 @@ export class NotificationsService {
     }
 
     //  On vérifie que la notification appartient bien à l'utilisateur connecté
-    if (notification.userId !== userId) {
+    if (notification.receiverId  !== userId) {
       throw new ForbiddenException(
         "Vous n'êtes pas autorisé à modifier cette notification",
       );

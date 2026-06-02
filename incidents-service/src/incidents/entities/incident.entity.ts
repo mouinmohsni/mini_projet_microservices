@@ -67,4 +67,9 @@ export class Incident {
   @UpdateDateColumn()
   @Field()
   updatedAt: Date;
+
+  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true })
+  assigneeId?: number;
+
 }

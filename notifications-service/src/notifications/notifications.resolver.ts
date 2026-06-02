@@ -4,7 +4,6 @@ import { NotificationsService } from './notifications.service';
 import { Notification } from './entities/notification.entity';
 import { CreateNotificationInput } from './dto/create-notification.input';
 
-// ⚠️ N'oublie pas que le dossier "auth" doit être présent dans ce service aussi !
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -34,8 +33,9 @@ export class NotificationsResolver {
   createNotification(
     @Args('createNotificationInput')
     createNotificationInput: CreateNotificationInput,
+    @CurrentUser() user: JwtUser,
   ): Promise<Notification> {
-    return this.notificationsService.create(createNotificationInput);
+    return this.notificationsService.create(createNotificationInput,user.id);
   }
 
  //methode pour marquer la notif comme lu

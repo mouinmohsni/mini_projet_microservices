@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  mysql-db-v2:
+    image: mysql:8.0
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    container_name: mysql-db-v2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  # Les microservices V2
+  auth-service-v2:
+    build: ./auth-service
+    container_name: auth-service-v2
+    ports:
+      - "3010:3000"
+    environment:
+      - DB_HOST=mysql-db-v2
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      mysql-db-v2:
+        condition: service_healthy
+
+  vehicles-service-v2:
+    build: ./vehicles-service
+    container_name: vehicles-service-v2
+    ports:
+      - "3011:3001"
+    environment:
+      - DB_HOST=mysql-db-v2
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      mysql-db-v2:
+        condition: service_healthy
+
+  traffic-service-v2:
+    build: ./traffic-service
+    container_name: traffic-service-v2
+    ports:
+      - "3012:3002"
+    environment:
+      - DB_HOST=mysql-db-v2
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      mysql-db-v2:
+        condition: service_healthy
+
+  incidents-service-v2:
+    build: ./incidents-service
+    container_name: incidents-service-v2
+    ports:
+      - "3013:3003"
+    environment:
+      - DB_HOST=mysql-db-v2
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      mysql-db-v2:
+        condition: service_healthy
+
+  notifications-service-v2:
+    build: ./notifications-service
+    container_name: notifications-service-v2
+    ports:
+      - "3014:3004"
+    environment:
+      - DB_HOST=mysql-db-v2
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      mysql-db-v2:
+        condition: service_healthy
+
+  # API GATEWAY V2
+  api-gateway-v2:
+    build: ./api-gateway
+    container_name: api-gateway-v2
+    ports:
+      - "4001:4000"
+    environment:
+      - AUTH_URL=http://auth-service-v2:3000/graphql
+      - VEHICLES_URL=http://vehicles-service-v2:3001/graphql
+      - TRAFFIC_URL=http://traffic-service-v2:3002/graphql
+      - INCIDENTS_URL=http://incidents-service-v2:3003/graphql
+      - NOTIFICATIONS_URL=http://notifications-service-v2:3004/graphql
+    depends_on:
+      - auth-service-v2
+      - vehicles-service-v2
+      - traffic-service-v2
+      - incidents-service-v2
+      - notifications-service-v2

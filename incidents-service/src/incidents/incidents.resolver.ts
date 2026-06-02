@@ -16,6 +16,7 @@ import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
+import {UpdateIncidentInput} from "./dto/update-incident.input";
 
 @Resolver(() => Incident)
 export class IncidentsResolver {
@@ -25,7 +26,7 @@ export class IncidentsResolver {
   // MUTATIONS
   // ---------------------------------------------------------
 
-// methode cree
+// methode creer
   @Mutation(() => Incident, {
     name: 'createIncident',
     description: 'Déclarer un nouvel incident',
@@ -40,7 +41,17 @@ export class IncidentsResolver {
     return this.incidentsService.createIncident(createIncidentInput, user.id);
   }
 
-  // methode update
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles('ADMIN') // Seul l'admin peut modifier
+  @Mutation(() => Incident)
+  updateIncident(
+      @Args('updateIncidentInput') updateIncidentInput: UpdateIncidentInput,
+  ) {
+    return this.incidentsService.update(updateIncidentInput.id, updateIncidentInput);
+  }
+
+
+  // methode update sratu
   @Mutation(() => Incident, {
     name: 'updateIncidentStatus',
     description: "Modifier le statut d'un incident",

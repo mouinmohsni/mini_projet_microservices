@@ -22,11 +22,21 @@ export class Notification {
   @Column({ default: false })
   @Field()
   isRead: boolean;
+  // L'ID de l'utilisateur qui a cree la notif
 
-  // L'ID de l'utilisateur qui doit recevoir cette notification
   @Column()
   @Field(() => Int)
   userId: number;
+  // L'ID de l'utilisateur qui doit recevoir cette notification
+
+  @Column()
+  @Field(() => Int)
+  receiverId: number;
+
+
+  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true })
+  incidentId?: number;
 
   @CreateDateColumn()
   @Field()
