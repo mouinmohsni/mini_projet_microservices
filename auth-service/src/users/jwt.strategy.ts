@@ -6,15 +6,20 @@ import { Injectable } from '@nestjs/common';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      // On dit au videur de chercher le token dans le header "Authorization: Bearer <token>"
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET, // Le même secret que dans users.module.ts
+      secretOrKey: process.env.JWT_SECRET!,
     });
   }
 
   // Si le token est valide, cette méthode est appelée automatiquement avec le contenu décodé (le payload)
-  async validate(payload: any) {
+  validate(payload: {
+    sub: number;
+    email: string;
+    role: string;
+    nom: string;
+    prenom: string;
+  }) {
     // On renvoie les infos qui seront attachées à la requête (req.user)
     return {
       id: payload.sub,

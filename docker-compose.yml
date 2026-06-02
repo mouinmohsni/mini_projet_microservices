@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # 1. NOTRE SERVEUR DE BASE DE DONNÉES UNIQUE
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      # On donne notre script SQL à MySQL pour qu'il crée les 5 bases au démarrage
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  # 2. NOS 5 MICROSERVICES
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql-db # <-- Magie Docker : le host n'est plus "localhost", c'est le nom du conteneur !
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      - mysql-db
+
+  vehicles-service:
+    build: ./vehicles-service
+    container_name: vehicles-service
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      - mysql-db
+
+  traffic-service:
+    build: ./traffic-service
+    container_name: traffic-service
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      - mysql-db
+
+  incidents-service:
+    build: ./incidents-service
+    container_name: incidents-service
+    ports:
+      - "3003:3003"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      - mysql-db
+
+  notifications-service:
+    build: ./notifications-service
+    container_name: notifications-service
+    ports:
+      - "3004:3004"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - JWT_SECRET=SuperCleSecretePourMonProjet2026
+    depends_on:
+      - mysql-db
+
+  # 3. NOTRE API GATEWAY (Le chef d'orchestre)
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "4000:4000"
+    depends_on:
+      - auth-service
+      - vehicles-service
+      - traffic-service
+      - incidents-service
+      - notifications-service

@@ -10,7 +10,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
   imports: [
     TypeOrmModule.forFeature([Incident]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET, // Toujours le même secret !
+      secret: process.env.JWT_SECRET!, // Toujours le même secret !
     }),
   ],
   providers: [IncidentsResolver, IncidentsService, JwtStrategy],

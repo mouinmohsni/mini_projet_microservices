@@ -10,7 +10,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
   imports: [
     TypeOrmModule.forFeature([Notification]), // <-- C'est LUI qui crée le Repository !
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET!,
     }),
   ],
   providers: [NotificationsResolver, NotificationsService, JwtStrategy],

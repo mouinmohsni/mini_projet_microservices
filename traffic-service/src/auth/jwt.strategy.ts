@@ -11,12 +11,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       // ⚠️ TRÈS IMPORTANT : Ce secret doit être EXACTEMENT le même que celui
       // que tu as mis dans le JwtModule du service Authentification !
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: process.env.JWT_SECRET!,
     });
   }
 
   // Cette méthode est appelée automatiquement si le token est valide
-  async validate(payload: any) {
+  validate(payload: {
+    sub: number;
+    email: string;
+    role: string;
+    nom: string;
+    prenom: string;
+  }) {
     // On extrait les infos du token pour les donner au Resolver
     return {
       id: payload.sub,
