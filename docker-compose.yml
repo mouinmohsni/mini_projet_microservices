@@ -4,6 +4,11 @@ services:
   #  serveur de base de donner
   mysql-db:
     image: mysql:8.0
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
+      interval: 60s
+      timeout: 60s
+      retries: 20
     container_name: mysql-db
     restart: always
     environment:
@@ -26,7 +31,8 @@ services:
       - DB_PASS=root
       - JWT_SECRET=SuperCleSecretePourMonProjet2026
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
 
   vehicles-service:
     build: ./vehicles-service
@@ -40,7 +46,8 @@ services:
       - DB_PASS=root
       - JWT_SECRET=SuperCleSecretePourMonProjet2026
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
 
   traffic-service:
     build: ./traffic-service
@@ -54,7 +61,8 @@ services:
       - DB_PASS=root
       - JWT_SECRET=SuperCleSecretePourMonProjet2026
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
 
   incidents-service:
     build: ./incidents-service
@@ -68,7 +76,8 @@ services:
       - DB_PASS=root
       - JWT_SECRET=SuperCleSecretePourMonProjet2026
     depends_on:
-      - mysql-db
+      mysql-db:
+          condition: service_healthy
 
   notifications-service:
     build: ./notifications-service
@@ -82,7 +91,8 @@ services:
       - DB_PASS=root
       - JWT_SECRET=SuperCleSecretePourMonProjet2026
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
 
   # 3. API GATEWAY
   api-gateway:

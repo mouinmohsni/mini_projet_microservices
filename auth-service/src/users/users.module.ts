@@ -7,15 +7,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  // On importe l'entité User pour que TypeORM génère un "Repository" (un outil pour faire des requêtes SQL facilement)
+  // On importe l'entité User pour que TypeORM génère un "Repository"
   imports: [
     TypeOrmModule.forFeature([User]),
+      //configuer le JWT
     JwtModule.register({
-      secret: process.env.JWT_SECRET!, // En production, on mettra ça dans un fichier .env !
-      signOptions: { expiresIn: '1h' }, // Le token expirera dans 1 heure
+      secret: process.env.JWT_SECRET!,
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   providers: [UsersResolver, UsersService, JwtStrategy],
-  exports: [UsersService], // On l'exporte au cas où un autre module en aurait besoin plus tard
+  exports: [UsersService],
 })
 export class UsersModule {}

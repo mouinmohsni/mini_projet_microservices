@@ -14,22 +14,21 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './gql-auth.guard';
 import { CurrentUser } from './current-user.decorator';
 
-// On indique que ce Resolver gère le type "User"
+
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  // On crée une Mutation (car on modifie/ajoute de la donnée)
-  // On la nomme 'register' pour que ce soit clair pour le client
+
   @Mutation(() => User, {
     name: 'register',
     description: 'Inscrire un nouvel utilisateur',
   })
   async register(
-    // On récupère les arguments envoyés par le client et on les valide avec notre dto
+    // On récupère les donner
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
-    // On passe le relais au service
+
     return this.usersService.create(createUserInput);
   }
 
@@ -44,9 +43,8 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'me', description: 'Récupérer mon profil' })
-  @UseGuards(GqlAuthGuard) // 🛡️ LE VIDEUR EST ICI ! Accès refusé sans token valide.
+  @UseGuards(GqlAuthGuard) //  Accès refusé sans token valide.
   async me(@CurrentUser() user: any): Promise<User | null> {
-    // Le Guard a fait le travail, on a l'ID de l'utilisateur dans 'user.id'
     return this.usersService.findOne(user.id);
   }
 

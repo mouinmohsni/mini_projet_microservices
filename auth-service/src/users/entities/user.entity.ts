@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// 1. Définition des Enums
+// Définition des Enums
 export enum UserRole {
   ADMIN = 'ADMIN',
   OPERATOR = 'OPERATOR',
@@ -24,17 +24,17 @@ export enum UserStatus {
   INACTIVE = 'INACTIVE',
 }
 
-// On enregistre les Enums pour que GraphQL les comprenne
+// On enregistre les Enums pour GraphQL
 registerEnumType(UserRole, { name: 'UserRole' });
 registerEnumType(UserStatus, { name: 'UserStatus' });
 
 // 2. La classe User
-@Entity('users') // Décorateur TypeORM : crée une table "users" dans MySQL
+@Entity('users') // Décorateur TypeORM
 @ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
 @Directive('@key(fields: "id")')
 export class User {
-  @PrimaryGeneratedColumn() // TypeORM : Clé primaire auto-incrémentée
-  @Field(() => Int) // GraphQL : Champ de type Entier
+  @PrimaryGeneratedColumn()
+  @Field(() => Int)
   id: number;
 
   @Column()
@@ -45,14 +45,11 @@ export class User {
   @Field()
   prenom: string;
 
-  @Column({ unique: true }) // TypeORM : L'email doit être unique en base
+  @Column({ unique: true }) //  L'email doit être unique en base
   @Field()
   email: string;
 
   @Column()
-  // ⚠️ ATTENTION SÉCURITÉ : Remarque bien qu'il n'y a PAS de décorateur @Field() ici !
-  // Ainsi, TypeORM va bien sauvegarder le mot de passe en base,
-  // mais GraphQL refusera de l'exposer si un client le demande.
   password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.OPERATOR })

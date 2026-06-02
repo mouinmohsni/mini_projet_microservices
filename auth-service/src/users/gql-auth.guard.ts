@@ -4,7 +4,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
-  // On "traduit" le contexte pour que Passport comprenne qu'on est dans GraphQL
+  // en change le context et la requete en format graphe par ce que guard travail en api rest a la base
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;

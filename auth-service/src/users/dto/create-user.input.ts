@@ -1,7 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-@InputType() // Indique à GraphQL que c'est un objet de données en entrée
+@InputType()
 export class CreateUserInput {
   @Field()
   @IsString()
@@ -24,6 +24,4 @@ export class CreateUserInput {
   })
   password: string;
 
-  // Note : On ne demande pas le "role" ni le "statut" ici.
-  // Par défaut, un nouvel inscrit sera "OPERATOR" et "ACTIVE" (géré par l'entité).
 }

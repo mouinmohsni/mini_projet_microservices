@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity';
 @ObjectType()
 export class LoginResponse {
   @Field()
-  access_token: string; // Le fameux JWT
+  access_token: string;
 
   @Field(() => User)
   user: User; // Les infos de l'utilisateur connecté
