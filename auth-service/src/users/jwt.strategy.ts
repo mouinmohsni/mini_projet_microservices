@@ -11,8 +11,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: process.env.JWT_SECRET!,
     });
   }
-
-  // Si le token est valide, cette méthode est appelée automatiquement avec le contenu décodé (le payload)
   validate(payload: {
     sub: number;
     email: string;
@@ -20,7 +18,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     nom: string;
     prenom: string;
   }) {
-    // On renvoie les infos qui seront attachées à la requête (req.user)
     return {
       id: payload.sub,
       email: payload.email,

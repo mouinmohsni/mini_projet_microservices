@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 1. NOTRE SERVEUR DE BASE DE DONNÉES UNIQUE
+  #  serveur de base de donner
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
@@ -9,19 +9,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      # On donne notre script SQL à MySQL pour qu'il crée les 5 bases au démarrage
       - ./mysql-init:/docker-entrypoint-initdb.d
 
-  # 2. NOS 5 MICROSERVICES
+  #  les microservices
   auth-service:
     build: ./auth-service
     container_name: auth-service
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=mysql-db # <-- Magie Docker : le host n'est plus "localhost", c'est le nom du conteneur !
+      - DB_HOST=mysql-db
       - DB_PORT=3306
       - DB_USER=root
       - DB_PASS=root
@@ -85,12 +84,18 @@ services:
     depends_on:
       - mysql-db
 
-  # 3. NOTRE API GATEWAY (Le chef d'orchestre)
+  # 3. API GATEWAY
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
     ports:
       - "4000:4000"
+    environment:
+      - AUTH_URL=http://auth-service:3000/graphql
+      - VEHICLES_URL=http://vehicles-service:3001/graphql
+      - TRAFFIC_URL=http://traffic-service:3002/graphql
+      - INCIDENTS_URL=http://incidents-service:3003/graphql
+      - NOTIFICATIONS_URL=http://notifications-service:3004/graphql
     depends_on:
       - auth-service
       - vehicles-service

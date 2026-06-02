@@ -11,7 +11,7 @@ import {
 import { Vehicule } from './vehicule.entity';
 
 //  La classe vehicule
-@Entity('vehiclePositions') // Décorateur TypeORM : crée une table "users" dans MySQL
+@Entity('vehicle_positions')
 @ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
 @Directive('@key(fields: "id")')
 export class VehiclePosition {

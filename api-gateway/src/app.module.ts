@@ -5,29 +5,31 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 
 @Module({
   imports: [
+    // Permet la requête HTTP au au la Gateway
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {
-        // Permet de passer la requête HTTP au contexte de la Gateway
         context: ({ req }) => ({ req }),
       },
       gateway: {
-        // 1. On liste nos 5 microservices avec leurs ports respectifs
+        // on donner les adresser des services
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
-            { name: 'auth', url: 'http://localhost:3000/graphql' },
-            { name: 'vehicles', url: 'http://localhost:3001/graphql' },
-            { name: 'traffic', url: 'http://localhost:3002/graphql' },
-            { name: 'incidents', url: 'http://localhost:3003/graphql' },
-            { name: 'notifications', url: 'http://localhost:3004/graphql' },
+            // Si Docker donne une URL, on l'utilise. Sinon (Plan B), on utilise localhost !
+            { name: 'auth', url: process.env.AUTH_URL || 'http://localhost:3000/graphql' },
+            { name: 'vehicles', url: process.env.VEHICLES_URL || 'http://localhost:3001/graphql' },
+            { name: 'traffic', url: process.env.TRAFFIC_URL || 'http://localhost:3002/graphql' },
+            { name: 'incidents', url: process.env.INCIDENTS_URL || 'http://localhost:3003/graphql' },
+            { name: 'notifications', url: process.env.NOTIFICATIONS_URL || 'http://localhost:3004/graphql' },
           ],
-        }),
-        // 2. On configure le transfert du Token JWT
+        } ),
+
+        // faire la transfere de Token JWT
         buildService({ name, url }) {
           return new RemoteGraphQLDataSource({
             url,
             willSendRequest({ request, context }: any) {
-              // Si le client a envoyé un token à la Gateway, on le copie et on l'envoie au sous-service
+              // Si on a un token on  l'envoie au service
               if (context.req && context.req.headers.authorization) {
                 request.http.headers.set(
                   'authorization',
