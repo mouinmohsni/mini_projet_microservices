@@ -17,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       port: parseInt(process.env.DB_PORT || '3306', 10),
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
-      database: 'traffic_db', // ⚠️ Attention, c'est la base des véhicules !
+      database: 'traffic_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),

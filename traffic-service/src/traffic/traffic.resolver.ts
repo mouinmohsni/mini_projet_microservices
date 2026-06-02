@@ -23,10 +23,10 @@ export class TrafficResolver {
   constructor(private readonly trafficService: TrafficService) {}
 
   // ---------------------------------------------------------
-  // MUTATIONS (Écriture)
+  // MUTATIONS
   // ---------------------------------------------------------
 
-  // 🔒 Réservé à l'ADMIN
+
   @Mutation(() => TrafficZone, {
     name: 'createZone',
     description: 'Créer une nouvelle zone de trafic',
@@ -39,7 +39,6 @@ export class TrafficResolver {
     return this.trafficService.createZone(createZoneInput);
   }
 
-  // 🔓 Accessible à l'ADMIN et à l'OPERATOR
   @Mutation(() => TrafficZone, {
     name: 'updateDensity',
     description: "Mettre à jour la densité d'une zone",
@@ -52,7 +51,6 @@ export class TrafficResolver {
     return this.trafficService.updateDensity(updateDensityInput);
   }
 
-  // 🔒 Réservé à l'ADMIN
   @Mutation(() => Boolean, {
     name: 'removeZone',
     description: 'Supprimer une zone de trafic',
@@ -67,7 +65,6 @@ export class TrafficResolver {
   // QUERIES (Lecture)
   // ---------------------------------------------------------
 
-  // 🟢 Accessible à tout utilisateur connecté (Admin ou Operator)
   @Query(() => [TrafficZone], {
     name: 'zones',
     description: 'Consulter toutes les zones',
@@ -77,7 +74,6 @@ export class TrafficResolver {
     return this.trafficService.findAllZones();
   }
 
-  // 🟢 Accessible à tout utilisateur connecté
   @Query(() => TrafficZone, {
     name: 'zone',
     description: 'Consulter une zone spécifique',

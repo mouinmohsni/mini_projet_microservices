@@ -6,7 +6,7 @@ export class CreatePositionInput {
   @Field(() => Int)
   @IsNotEmpty()
   @IsNumber()
-  vehicleId: number; // On doit savoir à quel véhicule appartient cette position
+  vehicleId: number;
 
   @Field(() => Float)
   @IsNotEmpty()

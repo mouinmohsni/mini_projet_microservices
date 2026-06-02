@@ -12,7 +12,7 @@ import { Vehicule } from './vehicule.entity';
 
 //  La classe vehicule
 @Entity('vehicle_positions')
-@ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
+@ObjectType()
 @Directive('@key(fields: "id")')
 export class VehiclePosition {
   @PrimaryGeneratedColumn()
@@ -35,11 +35,11 @@ export class VehiclePosition {
   @ManyToOne(() => Vehicule, (vehicule) => vehicule.positions, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'vehicleId' }) // C'est ça qui crée la vraie clé étrangère en base !
+  @JoinColumn({ name: 'vehicleId' })
   @Field(() => Vehicule)
   vehicule: Vehicule;
 
-  // On garde l'ID accessible facilement si on en a besoin
+
   @Column()
   @Field(() => Int)
   vehicleId: number;

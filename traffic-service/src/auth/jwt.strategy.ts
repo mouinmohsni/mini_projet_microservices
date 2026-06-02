@@ -6,16 +6,13 @@ import { Injectable } from '@nestjs/common';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      // On dit de chercher le token dans le header "Authorization: Bearer <token>"
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      // ⚠️ TRÈS IMPORTANT : Ce secret doit être EXACTEMENT le même que celui
-      // que tu as mis dans le JwtModule du service Authentification !
+
       secretOrKey: process.env.JWT_SECRET!,
     });
   }
 
-  // Cette méthode est appelée automatiquement si le token est valide
   validate(payload: {
     sub: number;
     email: string;
@@ -23,7 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     nom: string;
     prenom: string;
   }) {
-    // On extrait les infos du token pour les donner au Resolver
     return {
       id: payload.sub,
       email: payload.email,

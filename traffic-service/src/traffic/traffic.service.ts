@@ -16,7 +16,7 @@ export class TrafficService {
     private trafficZoneRepository: Repository<TrafficZone>,
   ) {}
 
-  // 1. Créer une zone
+  //  Créer une zone
   async createZone(createZoneInput: CreateZoneInput): Promise<TrafficZone> {
     const existing = await this.trafficZoneRepository.findOne({
       where: { nom: createZoneInput.nom },
@@ -30,12 +30,12 @@ export class TrafficService {
     return this.trafficZoneRepository.save(newZone);
   }
 
-  // 2. Consulter toutes les zones
+  //  Consulter toutes les zones
   async findAllZones(): Promise<TrafficZone[]> {
     return this.trafficZoneRepository.find();
   }
 
-  // 3. Consulter une zone par ID
+  //  Consulter une zone par ID
   async findOneZone(id: number): Promise<TrafficZone> {
     const zone = await this.trafficZoneRepository.findOne({ where: { id } });
     if (!zone) {
@@ -44,7 +44,7 @@ export class TrafficService {
     return zone;
   }
 
-  // 4. Mettre à jour la densité et calculer le niveau automatiquement
+  //  Mettre à jour la densité et calculer le niveau automatiquement
   async updateDensity(
     updateDensityInput: UpdateDensityInput,
   ): Promise<TrafficZone> {
@@ -53,7 +53,7 @@ export class TrafficService {
     // Mise à jour de la densité
     zone.densite = updateDensityInput.densite;
 
-    // Logique métier : Calcul du niveau de trafic
+
     if (zone.densite < 50) {
       zone.niveau = TrafficLevel.FAIBLE;
     } else if (zone.densite >= 50 && zone.densite < 100) {
@@ -62,7 +62,6 @@ export class TrafficService {
       zone.niveau = TrafficLevel.ELEVE;
     }
 
-    // Sauvegarde en base de données
     return this.trafficZoneRepository.save(zone);
   }
 

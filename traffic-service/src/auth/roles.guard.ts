@@ -13,14 +13,12 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
     );
     if (!requiredRoles) {
-      return true; // Si aucun rôle n'est exigé, on laisse passer
+      return true;
     }
 
-    // On récupère l'utilisateur décodé par le GqlAuthGuard
     const ctx = GqlExecutionContext.create(context);
     const user = ctx.getContext().req.user;
 
-    // On vérifie si l'utilisateur a le bon rôle
     return user && requiredRoles.includes(user.role);
   }
 }

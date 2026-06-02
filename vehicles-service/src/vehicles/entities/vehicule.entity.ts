@@ -24,8 +24,8 @@ export enum VehicleStatus {
 // On enregistre les Enums pour que GraphQL les comprenne
 registerEnumType(VehicleStatus, { name: 'VehicleStatus' });
 //  La classe vehicule
-@Entity('vehicules') // Décorateur TypeORM : crée une table "users" dans MySQL
-@ObjectType() // Décorateur GraphQL : crée un type "User" dans le schéma GraphQL
+@Entity('vehicules')
+@ObjectType()
 @Directive('@key(fields: "id")')
 export class Vehicule {
   @PrimaryGeneratedColumn()

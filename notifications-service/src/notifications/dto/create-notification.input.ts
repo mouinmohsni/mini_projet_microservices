@@ -11,5 +11,5 @@ export class CreateNotificationInput {
   @Field(() => Int)
   @IsNotEmpty()
   @IsNumber()
-  userId: number; // À qui on envoie la notification
+  userId: number;
 }

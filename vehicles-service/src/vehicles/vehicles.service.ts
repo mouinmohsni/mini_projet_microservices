@@ -22,7 +22,7 @@ export class VehiclesService {
     private positionRepository: Repository<VehiclePosition>,
   ) {}
 
-  // 1. Ajouter un véhicule
+  // Ajouter un véhicule
   async createVehicle(
     createVehicleInput: CreateVehicleInput,
   ): Promise<Vehicule> {
@@ -40,16 +40,16 @@ export class VehiclesService {
     return this.vehiculeRepository.save(newVehicle);
   }
 
-  // 2. Consulter la liste des véhicules
+  //  Consulter la liste des véhicules
   async findAllVehicles(): Promise<Vehicule[]> {
     return this.vehiculeRepository.find();
   }
 
-  // 3. Consulter le détail d'un véhicule (avec son historique de déplacements)
+  //  Consulter le détail d'un véhicule (avec son historique de déplacements)
   async findOneVehicle(id: number): Promise<Vehicule> {
     const vehicle = await this.vehiculeRepository.findOne({
       where: { id },
-      relations: { positions: true }, // Magique : TypeORM va faire la jointure (JOIN) automatiquement !
+      relations: { positions: true },
     });
 
     if (!vehicle) {
@@ -58,7 +58,7 @@ export class VehiclesService {
     return vehicle;
   }
 
-  // 4. Enregistrer une position GPS
+  // Enregistrer une position GPS
   async addPosition(
     createPositionInput: CreatePositionInput,
   ): Promise<VehiclePosition> {
@@ -68,8 +68,8 @@ export class VehiclesService {
     const newPosition = this.positionRepository.create({
       latitude: createPositionInput.latitude,
       longitude: createPositionInput.longitude,
-      timestamp: new Date(), // On met l'heure actuelle
-      vehicule: vehicle, // On lie la position au véhicule trouvé
+      timestamp: new Date(),
+      vehicule: vehicle,
     });
 
     return this.positionRepository.save(newPosition);
@@ -80,10 +80,8 @@ export class VehiclesService {
     id: number,
     updateVehicleInput: UpdateVehicleInput,
   ): Promise<Vehicule> {
-    // On récupère le véhicule (la méthode findOneVehicle gère déjà l'erreur 404 si non trouvé)
     const vehicle = await this.findOneVehicle(id);
 
-    // On fusionne les nouvelles données avec l'ancien véhicule
     Object.assign(vehicle, updateVehicleInput);
 
     // On sauvegarde
@@ -94,7 +92,7 @@ export class VehiclesService {
   async removeVehicle(id: number): Promise<boolean> {
     const vehicle = await this.findOneVehicle(id);
     await this.vehiculeRepository.remove(vehicle);
-    return true; // On renvoie true si la suppression a réussi
+    return true;
   }
 
   // 7. Modifier le Statu d'un véhicule

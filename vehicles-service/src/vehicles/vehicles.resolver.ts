@@ -23,7 +23,7 @@ export class VehiclesResolver {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   // ---------------------------------------------------------
-  // MUTATIONS (Pour modifier ou ajouter des données)
+  // MUTATIONS
   // ---------------------------------------------------------
 
   @Mutation(() => Vehicule, {
@@ -47,7 +47,7 @@ export class VehiclesResolver {
   }
 
   // ---------------------------------------------------------
-  // QUERIES (Pour lire des données)
+  // QUERIES
   // ---------------------------------------------------------
 
   @Query(() => [Vehicule], {
@@ -68,7 +68,7 @@ export class VehiclesResolver {
     return this.vehiclesService.findOneVehicle(id);
   }
 
-  // 🔒 SEUL L'ADMIN PEUT MODIFIER TOUT LE VÉHICULE
+
 
   @UseGuards(GqlAuthGuard, RolesGuard) // On active les deux videurs
   @Roles('ADMIN') // On exige le rôle ADMIN
@@ -85,10 +85,10 @@ export class VehiclesResolver {
     );
   }
 
-  // 🔓 L'OPÉRATEUR (et l'Admin) PEUT MODIFIER LE STATUT
+
 
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'OPERATOR') // Les deux rôles sont acceptés
+  @Roles('ADMIN', 'OPERATOR')
   @Mutation(() => Vehicule, {
     name: 'updateVehicleStatus',
     description: 'Modifier uniquement le statut (Opérateur)',
@@ -100,9 +100,9 @@ export class VehiclesResolver {
     return this.vehiclesService.updateStatus(updateVehicleStatusInput);
   }
 
-  // 🔒 SEUL L'ADMIN PEUT SUPPRIMER TOUT LE VÉHICULE
 
-  @UseGuards(GqlAuthGuard, RolesGuard) // On active les deux videurs
+
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles('ADMIN') // On exige le rôle ADMIN
   @Mutation(() => Boolean, {
     name: 'removeVehicle',

@@ -6,7 +6,7 @@ import { IsEnum, IsOptional } from 'class-validator';
 @InputType()
 export class UpdateVehicleInput extends PartialType(CreateVehicleInput) {
   @Field(() => Int)
-  id: number; // L'ID est obligatoire pour savoir qui on modifie
+  id: number;
 
   @Field(() => VehicleStatus, { nullable: true })
   @IsOptional()
